@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- base copy from Ayo's github -->
+<html lang="en" style="visibility: visible;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Virtual Jack O' Lantern</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+		
+	</head>
+	<body>
+		<div id="pumpkinday">
+			<img  src="images/day.png" id="changer" height="80%" width="50%" onclick="changeImage(this)"/></a>
+		</div>
+
+<style>
+	body {
+		background-color: #7ec0ee;/*daytime blue default*/	
+	}
+	#pumpkinday{
+		height: 82vh;
+		width: 82vw;
+		padding-top: 18vh;
+				padding-left: 29vw;
+		margin: auto;
+	}
+</style>
+
+<script>
+var socket;
+var url='192.168.1.105';
+var port=8000;//semi?
+
+var GPIO = require('onoff').Gpio,
+    led = new GPIO(17, 'out');
+
+var url='http//192.168.1.105';//come back to this- todo
+
+//$(document).ready(function(){
+	socket = io.connect(url+':'+port);
+	
+	socket.on('toScreen', function (data) {
+		console.log(data);
+
+	});
+
+//beinging code for light change with data (Audrey's code ;-/)
+
+
+
+}
+</script>	
+		<!-- your server info -->
+		<script src="//192.168.1.105:8000/socket.io/socket.io.js" type="text/javascript"></script>
+		<script src="js/jquery.js" type="text/javascript"></script>
+		<script src="js/three.min.js"></script>
+	
+	</body>
+
+</html>
