@@ -32,11 +32,11 @@ io.sockets.on('connection', function (socket) {
     console.log('Serial open');
     port.on('data', function(data) {
 
-      console.log(data);
-      console.log('data length: ' + data.length);
+      // console.log(data);
+      // console.log('data length: ' + data.length);
 
       var lightVal = data[5];
-      console.log(lightVal);
+      // console.log(lightVal);
 
       socket.emit('toWeb', lightVal );
       port.write("A");//do we need this?
@@ -60,27 +60,13 @@ io.sockets.on('connection', function (socket) {
 //pass the data of rgb from the web and write it to the rgb led
 
 function setLED(data){
-  console.log(data.length);
-  var r1 = data[0];
-  var r2 = data[1];
-  var r3 = data[2];
+  //console.log(data.length);
 
-  var rData = r1 + r2 + r3;
-  var rVal = parseInt(rData, 10);
+  var rVal = parseInt(data.rval, 10);
+  var gVal = parseInt(data.gval, 10);
+  var bVal = parseInt(data.bval, 10);
 
-  var g1 = data[4];
-  var g2 = data[5];
-  var g3 = data[6];
-
-  var gData = g1 + g2 + g3;
-  var gVal = parseInt(gData, 10);
-
-  var b1 = data[7];
-  var b2 = data[8];
-  var b3 = data[9];
-
-  var bData = b1 + b2 + b3;
-  var bVal = parseInt(bData, 10);
+  console.log("rVal: " + rVal);
 
 
 Number.prototype.mapRGBRange = function () {
@@ -89,9 +75,10 @@ Number.prototype.mapRGBRange = function () {
 
 console.log("check color range mapping: " + rVal.mapRGBRange() );
 
-  piblaster.setPwm(17, rVal.mapRGBRange );
-  piblaster.setPwm(18, gVal.mapRGBRange );
-  piblaster.setPwm(27, bVal.mapRGBRange );
+var r = rVal.mapRGBRange();
+  piblaster.setPwm(17, r );
+  piblaster.setPwm(18, gVal.mapRGBRange() );
+  piblaster.setPwm(27, bVal.mapRGBRange() );
 
 }
 

@@ -31,6 +31,7 @@
     /*background-image: url("image/background-day.svg");*/
     /*background-repeat: repeat; */
 
+
   }
   #pumpkin{
     height: 50vh;
@@ -91,55 +92,7 @@ function submit(){
     var bval = document.getElementById('data.b').value;
     console.log("clicked");
 
-    //converting var values to strings, prep to add 000s to length
-    if(rval < 10){
-      var r = rval.toString();
-      rData = "0" + "0" + r;
-    }
-
-    else if( rval < 100){
-      var r = rval.toString();
-      rData = "0" + r;
-    }
-
-
-    else{
-      var rData = rval.toString();
-    }
-
-    //green input converstions
-
-    if(gval < 10){
-      var g = gval.toString();
-      gData = "0" + "0" + g;
-    }
-
-    else if( gval < 100){
-      var g = gval.toString();
-      gData = "0" + g;
-    }
-
-    else{
-      var gData = gval.toString();
-    }
-
-     //Blue input converstions
-
-    if(bval < 10){
-      var b = bval.toString();
-      bData = "0" + "0" + b;
-    }
-
-    else if( bval < 100){
-      var b = bval.toString();
-      bData = "0" + b;
-    }
-
-    else{
-      var bData = bval.toString();
-    }
-
-     socket.emit('submit',{rData,gData,bData});
+     socket.emit('submit',{rval,gval,bval});
 
 }
 
