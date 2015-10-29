@@ -9,10 +9,8 @@ var io = require("socket.io").listen(server);
 
 var serialport = require("serialport");
 var SerialPort = serialport.SerialPort;
-var GPIO = require('onoff').Gpio;
-    rled = new GPIO(17, 'out');
-    gled = new GPIO(18, 'out');
-    bled = new GPIO(27, 'out');
+var piblaster = require('pi-blaster.js');
+
 
 var port = new SerialPort("/dev/ttyAMA0", {
   baudrate: 9600,
@@ -27,54 +25,73 @@ console.log('Simple static server listening at '+url+':'+port);
 io.sockets.on('connection', function (socket) {
   port.open(function(error) {
 
-  if (error) {
-    console.log('failed to open: ' + error);
+    if (error) {
+      console.log('failed to open: ' + error);
     //send that data yo!
   } else {
     console.log('Serial open');
     port.on('data', function(data) {
-    console.log('data length: ' + data.length);
-    var lightVal = data[5];
-    console.log(lightVal);
-    // result = data.split(',')
-    // result[3]
 
-    socket.emit('toWeb', lightVal );
-    port.write("A");//do we need this?
+      console.log(data);
+      console.log('data length: ' + data.length);
+
+      var lightVal = data[5];
+      console.log(lightVal);
+
+      socket.emit('toWeb', lightVal );
+      port.write("A");//do we need this?
     });
   }
+
+  });
+
+  socket.on('submit', function (data) {
+      console.log(data);
+      setLED(data);
+    });
+
 });
-});
+
 //---------------------------------------------------------------------------------------------------------
 
+
+//-------------------------------here begins the functions to map values from web and map into the led---
+
 //pass the data of rgb from the web and write it to the rgb led
-function ledOff(){
-    rled.writeSync(0);
-    gled.writeSync(0);
-    bled.writeSync(0);
+
+function setLED(data){
+  console.log(data.length);
+  var r1 = data[0];
+  var r2 = data[1];
+  var r3 = data[2];
+
+  var rData = r1 + r2 + r3;
+  var rVal = parseInt(rData, 10);
+
+  var g1 = data[4];
+  var g2 = data[5];
+  var g3 = data[6];
+
+  var gData = g1 + g2 + g3;
+  var gVal = parseInt(gData, 10);
+
+  var b1 = data[7];
+  var b2 = data[8];
+  var b3 = data[9];
+
+  var bData = b1 + b2 + b3;
+  var bVal = parseInt(bData, 10);
+
+
+Number.prototype.mapRGBRange = function () {
+  return (this - 0) * (1 - 0) / (255 - 0) + 0;
+};
+
+console.log("check color range mapping: " + rVal.mapRGBRange() );
+
+  piblaster.setPwm(17, rVal.mapRGBRange );
+  piblaster.setPwm(18, gVal.mapRGBRange );
+  piblaster.setPwm(27, bVal.mapRGBRange );
+
 }
-
-function ColorLed(){
-    rled.writeSync(rval);
-    gled.writeSync(gval);
-    bled.writeSync(bval);
-
-}
-
-//will need to use submit
-// function spookyLight(){
-// }
-
-// socket.on('submit', function (data) {
-//       console.log(data);
-//   });
-
-    // socket.on('toScreen', function (data) {
-    //     console.log(data[5]);
-    //     light(data[5]);
-    // });
-
-
-
-
 
